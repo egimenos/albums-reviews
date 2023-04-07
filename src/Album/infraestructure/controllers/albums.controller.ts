@@ -1,11 +1,21 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Inject,
+  Param,
+  Post,
+  UseFilters,
+} from '@nestjs/common';
 import { ALBUM_SYMBOLS } from '../IoC/symbols';
 import { CreateAlbumUseCase } from 'src/Album/application/create-album.usecase';
 import { CreateAlbumDto } from 'src/Album/domain/dtos/album.dtos';
 import { Album } from 'src/Album/domain/entities/album.entity';
 import { FindByNameAlbumUseCase } from 'src/Album/application/find-album.usecase';
+import { ValidationExceptionFilter } from 'src/Shared/infraestructure/filters/validation-exception.filter';
 
 @Controller('albums')
+@UseFilters(ValidationExceptionFilter)
 export class AlbumsController {
   constructor(
     @Inject(ALBUM_SYMBOLS.CREATE_ALBUM_USECASE)

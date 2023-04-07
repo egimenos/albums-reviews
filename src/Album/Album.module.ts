@@ -3,10 +3,11 @@ import { ALBUM_SYMBOLS } from './infraestructure/IoC/symbols';
 import { PrismaAlbumRepository } from './infraestructure/repositories/prisma-album.repository';
 import { CreateAlbumUseCase } from './application/create-album.usecase';
 import { FindByNameAlbumUseCase } from './application/find-album.usecase';
+import { AlbumsController } from './infraestructure/controllers/albums.controller';
 
 @Module({
   imports: [],
-  controllers: [],
+  controllers: [AlbumsController],
   providers: [
     {
       provide: ALBUM_SYMBOLS.ALBUM_REPOSITORY,
