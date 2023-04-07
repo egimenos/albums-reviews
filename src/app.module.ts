@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { AlbumModule } from './Album/Album.module';
 
 @Module({
-  imports: [],
+  imports: [AlbumModule],
   controllers: [],
   providers: [],
 })
