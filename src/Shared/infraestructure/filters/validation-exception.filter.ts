@@ -12,7 +12,6 @@ export class ValidationExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
 
     response.status(400).json({
-      statusCode: 400,
       error: 'Bad Request',
       message: exception.message,
       details: exception.getResponse(),
