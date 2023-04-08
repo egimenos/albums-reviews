@@ -3,7 +3,7 @@ import {
   FetchReviewsRepository,
 } from 'src/Album/domain/repositories/fetch-reviews.repository';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosError, AxiosResponse } from 'axios';
 import cheerio from 'cheerio';
 import { ALBUM_SYMBOLS } from '../IoC/symbols';
 import { CreateAlbumUseCase } from 'src/Album/application/create-album.usecase';
@@ -27,7 +27,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
   }
 
   private async fetchAllReviews() {
-    let page = 2120;
+    let page = 1;
     let completed = 0;
     let completedPages = 0;
 
@@ -35,7 +35,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
       const url = baseUrl + `/reviews/albums/?page=${page}`;
       const { html, code } = await this.fetchHTML(url);
 
-      if (code !== 200) {
+      if (code === 404 || page >= 4000) {
         break;
       }
 
@@ -66,12 +66,16 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
     try {
       const response: AxiosResponse<string> = await axios.get(url);
       return { html: response.data, code: response.status };
-    } catch (error) {
+    } catch (error: unknown) {
       Logger.error(
         `Error fetching HTML: ${error} ${url}`,
         'FetchPitchforkReviewsCommand',
       );
-      return { html: 'Not found', code: 404 };
+      if (error instanceof AxiosError) {
+        return { html: error.response.statusText, code: error.response.status };
+      }
+
+      return { html: 'Error fetching data', code: 500 };
     }
   }
 
@@ -112,7 +116,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
       };
       Logger.log(album);
 
-      this.createAlbumUseCase.run(album);
+      await this.createAlbumUseCase.run(album);
     } catch (error) {
       Logger.error(`Error fetching review ${error}`);
     }
