@@ -3,5 +3,9 @@ export type Response = {
 };
 
 export interface FetchReviewsRepository {
-  fetchReviews(): Promise<Response>;
+  fetchReviews({
+    firstFetching,
+  }: {
+    firstFetching?: boolean;
+  }): Promise<Response>;
 }

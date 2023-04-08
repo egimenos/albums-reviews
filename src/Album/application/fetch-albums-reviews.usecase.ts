@@ -14,6 +14,6 @@ export class FetchAlbumsReviewsUseCase {
   ) {}
 
   async run(): Promise<FetchReviewsResponse> {
-    return this.reviewsRepository.fetchReviews();
+    return this.reviewsRepository.fetchReviews({ firstFetching: true });
   }
 }

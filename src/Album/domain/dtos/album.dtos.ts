@@ -20,4 +20,10 @@ export class CreateAlbumDto {
 
   @IsDate()
   reviewDate: Date;
+
+  @IsString()
+  genres: string;
+
+  @IsString()
+  artist: string;
 }

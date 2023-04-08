@@ -15,5 +15,8 @@ model Album {
   id          Int      @id @default(autoincrement())
   name        String   @unique
   score       Float
-  reviewDate DateTime  @map(name: "review_date")
+  reviewDate  DateTime  @map(name: "review_date")
+  genres      String
+  artist      String
+  createdAt   DateTime @default(now()) @map(name: "created_at")
 }
