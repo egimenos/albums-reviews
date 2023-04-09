@@ -7,8 +7,9 @@ WORKDIR /user/src/app
 RUN npm install -g npm@9.5.0
 
 COPY package.json package-lock.json ./
+COPY prisma ./prisma/
 
-RUN npm ci
+RUN npm install
 
 COPY . .
 
@@ -38,8 +39,9 @@ RUN npm install -g npm@9.5.0
 
 COPY --from=install-dependencies /user/src/app/node_modules ./node_modules
 COPY --from=create-build /user/src/app/dist ./dist
+COPY --from=install-dependencies /user/src/app/prisma ./prisma
 COPY package.json ./
 
 RUN npm prune --production
 
-CMD ["npm", "run", "start:prod"]
+CMD [ "npm", "run", "start:migrate:prod" ]
