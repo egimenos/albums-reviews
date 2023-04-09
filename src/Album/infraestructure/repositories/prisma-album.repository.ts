@@ -24,7 +24,7 @@ export class PrismaAlbumRepository
   }
 
   async findByName(name: string): Promise<Album | null> {
-    const album: Album | null = await this.repository.findUnique({
+    const album: Album | null = await this.repository.findFirst({
       where: { name },
     });
     return album;

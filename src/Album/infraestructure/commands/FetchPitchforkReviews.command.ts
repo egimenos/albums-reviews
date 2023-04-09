@@ -72,10 +72,10 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
         'FetchPitchforkReviewsCommand',
       );
       if (error instanceof AxiosError) {
-        return { html: error.response.statusText, code: error.response.status };
+        return { html: null, code: error.response?.status || 500 };
       }
 
-      return { html: 'Error fetching data', code: 500 };
+      return { html: null, code: 500 };
     }
   }
 

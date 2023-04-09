@@ -1,8 +1,17 @@
-.PHONY: up down
+.PHONY: start stop app-logs build start-services
 
-start-db:
-	cd docker && docker-compose up -d
+build:
+	docker-compose up -d --build
 
-stop-db:
-	cd docker && docker-compose down
+start:
+	docker-compose up -d
+
+stop:
+	docker-compose down
+
+app-logs:
+	docker-compose logs -f nest-api
+
+start-services:
+	docker compose up -d postgres pgadmin
 
