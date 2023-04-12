@@ -26,4 +26,7 @@ export class CreateAlbumDto {
 
   @IsString()
   artist: string;
+
+  @IsString()
+  link: string;
 }

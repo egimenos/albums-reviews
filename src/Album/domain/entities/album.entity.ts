@@ -5,5 +5,6 @@ export class Album {
   reviewDate: Date;
   genres: string;
   artist: string;
+  link: string;
   createdAt?: Date;
 }

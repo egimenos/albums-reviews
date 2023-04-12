@@ -112,6 +112,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
         score: parseFloat(score),
         reviewDate: new Date(publicationDate),
         genres: genres.join('-'),
+        link: link,
         artist,
       };
       Logger.log(album);

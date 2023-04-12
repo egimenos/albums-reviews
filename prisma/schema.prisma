@@ -18,6 +18,7 @@ model Album {
   reviewDate  DateTime  @map(name: "review_date")
   genres      String
   artist      String
+  link        String?
   createdAt   DateTime @default(now()) @map(name: "created_at")
 
   @@unique([name, artist, reviewDate])

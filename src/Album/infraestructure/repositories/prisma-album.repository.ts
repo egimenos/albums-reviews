@@ -17,8 +17,28 @@ export class PrismaAlbumRepository
   }
 
   async create(album: Album): Promise<Album> {
-    const createdAlbum = await this.repository.create({
-      data: album,
+    const { name, score, reviewDate, genres, artist, link } = album;
+
+    const createdAlbum = await this.repository.upsert({
+      where: {
+        name_artist_reviewDate: {
+          name,
+          artist,
+          reviewDate,
+        },
+      },
+      update: {
+        score,
+        genres,
+      },
+      create: {
+        name,
+        score,
+        reviewDate,
+        genres,
+        artist,
+        link,
+      },
     });
     return createdAlbum;
   }
