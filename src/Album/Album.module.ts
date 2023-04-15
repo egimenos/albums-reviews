@@ -6,6 +6,7 @@ import { FindByNameAlbumUseCase } from './application/find-album.usecase';
 import { AlbumsController } from './infraestructure/controllers/albums.controller';
 import { FetchPitchforkReviewsCommand } from './infraestructure/commands/FetchPitchforkReviews.command';
 import { FetchAlbumsReviewsUseCase } from './application/fetch-albums-reviews.usecase';
+import { FindLastAlbumUseCase } from './application/find-last-album.usecase';
 
 @Module({
   imports: [],
@@ -30,6 +31,10 @@ import { FetchAlbumsReviewsUseCase } from './application/fetch-albums-reviews.us
     {
       provide: ALBUM_SYMBOLS.FETCH_REVIEWS_REPOSITORY,
       useClass: FetchPitchforkReviewsCommand,
+    },
+    {
+      provide: ALBUM_SYMBOLS.FIND_LAST_ALBUM_USECASE,
+      useClass: FindLastAlbumUseCase,
     },
   ],
 })

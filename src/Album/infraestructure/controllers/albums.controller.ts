@@ -38,7 +38,7 @@ export class AlbumsController {
   }
 
   @Post('/fetch_reviews')
-  fetchReviews() {
-    return this.fetchAlbumsReviewsUseCase.run();
+  fetchReviews(@Body('first_fetching') firstFetching?: boolean) {
+    return this.fetchAlbumsReviewsUseCase.run(firstFetching);
   }
 }

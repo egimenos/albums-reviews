@@ -1,5 +1,7 @@
 export type Response = {
   completed: number;
+  pages: number;
+  message: string;
 };
 
 export interface FetchReviewsRepository {

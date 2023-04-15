@@ -16,6 +16,16 @@ export class PrismaAlbumRepository
     this.repository = this.getClient().album;
   }
 
+  async findLast(): Promise<Album | null> {
+    const album = await this.repository.findFirst({
+      orderBy: {
+        reviewDate: 'desc',
+      },
+    });
+
+    return album;
+  }
+
   async create(album: Album): Promise<Album> {
     const { name, score, reviewDate, genres, artist, link } = album;
 
