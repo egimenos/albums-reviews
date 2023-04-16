@@ -1,6 +1,6 @@
-# Pitchfork Album Reviews
+# Albums Reviews
 
-A backend project to fetch album reviews from various websites and expose endpoints via an API for further use. the motivation behind it is to use it a s a side project to keep practicing with Nestjs framework.
+A backend project to fetch album reviews from various websites and expose endpoints via an API for further use. the motivation behind it is to use it as a side project to keep practicing with Nestjs framework.
 
 ## Features
 
@@ -29,6 +29,10 @@ cd  reviews
 
 3. Run the command `make start`
 
+## Deployment.
+
+The project is prepared and contains a `fly.toml` to be deployed to `https://fly.io/`
+
 ## API Endpoints
 
 This project exposes the following API endpoints:
@@ -55,3 +59,7 @@ Finds an album by its name. Returns the album details if found, otherwise return
 - Body: `first_fetching` (optional)
 
 Fetches album reviews from external sources. If `first_fetching` is set to `true`, it will fetch all available reviews; otherwise, it will only fetch the latest reviews.
+
+## Scheduled tasks
+
+We use the task scheduling features from Nest to run a crobjob each day to fetch last reviews: https://docs.nestjs.com/techniques/task-scheduling
