@@ -11,6 +11,7 @@ import { CreateAlbumUseCase } from 'src/Album/application/create-album.usecase';
 import { FindLastAlbumUseCase } from 'src/Album/application/find-last-album.usecase';
 import { Album } from 'src/Album/domain/entities/album.entity';
 import { isBefore } from 'date-fns';
+import { Cron } from '@nestjs/schedule';
 
 const baseUrl = 'https://pitchfork.com';
 @Injectable()
@@ -21,6 +22,8 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
     @Inject(ALBUM_SYMBOLS.FIND_LAST_ALBUM_USECASE)
     protected findLastAlbumUseCase: FindLastAlbumUseCase,
   ) {}
+
+  @Cron('0 2 * * *')
   async fetchReviews({
     firstFetching = false,
   }: { firstFetching?: boolean } = {}): Promise<FetchedReviewsResponse> {
@@ -28,6 +31,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
       return this.fetchAllReviews();
     }
 
+    Logger.log('Executing Cron job to fetch last reviews');
     return this.fetchLastReviews();
   }
 
