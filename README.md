@@ -55,4 +55,3 @@ Finds an album by its name. Returns the album details if found, otherwise return
 - Body: `first_fetching` (optional)
 
 Fetches album reviews from external sources. If `first_fetching` is set to `true`, it will fetch all available reviews; otherwise, it will only fetch the latest reviews.
-# albums-reviews
