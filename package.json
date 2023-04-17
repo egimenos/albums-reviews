@@ -13,7 +13,7 @@
     "migrate": "DATABASE_URL=postgresql://admin:admin@localhost:5432/pitchfork-reviews npx prisma migrate dev",
     "prebuild": "rimraf dist",
     "start:debug": "nest start --debug --watch",
-    "start:dev": "nest start --watch",
+    "start:dev": "DATABASE_URL=postgresql://admin:admin@localhost:5432/pitchfork-reviews nest start --watch",
     "start:inspect": "nest start --debug 0.0.0.0:9229 --watch --exec 'node --inspect-brk'",
     "start:migrate:prod": "npx prisma migrate deploy && npm run start:prod",
     "start:prod": "node dist/main",

@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Inject,
+  Logger,
   Param,
   Post,
   UseFilters,
@@ -34,6 +35,7 @@ export class AlbumsController {
 
   @Get('/:name')
   findByName(@Param('name') name: string): Promise<Album | null> {
+    Logger.log(name);
     return this.findByNameAlbumUseCase.run(name);
   }
 
