@@ -1,6 +1,7 @@
 # Albums Reviews
 
-A backend project to fetch album reviews from various websites and expose endpoints via an API for further use. The motivation behind it is to use it as a personal use side project to keep practicing with Nestjs framework. It currently ony fetches reviews from https://pitchfork.com and I used it along with this chrome extension to  inject the scores into the playlists: https://github.com/egimenos/spotify-playlist-reviews-extension
+A backend project to fetch album reviews from various websites and expose endpoints via an API for further use. The motivation behind it is to use it as a personal use side project to keep practicing with Nestjs framework. 
+It currently only fetches reviews from https://pitchfork.com and I used it along with this chrome extension to inject the scores into the different playlists: https://github.com/egimenos/spotify-playlist-reviews-extension, so I cna easily see the score of the album a songs belongs and also go to the review page easily.
 
 ## Features
 
