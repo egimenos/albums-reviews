@@ -40,6 +40,7 @@ export class PrismaAlbumRepository
       update: {
         score,
         genres,
+        link,
       },
       create: {
         name,
@@ -54,9 +55,28 @@ export class PrismaAlbumRepository
   }
 
   async findByName(name: string): Promise<Album | null> {
-    const album: Album | null = await this.repository.findFirst({
-      where: { name },
+    // Attempt to find an exact match
+    let album: Album | null = await this.repository.findFirst({
+      where: {
+        name: {
+          equals: name,
+          mode: 'insensitive',
+        },
+      },
     });
+
+    // If an exact match is not found, perform a search with 'contains'
+    if (!album) {
+      album = await this.repository.findFirst({
+        where: {
+          name: {
+            contains: name,
+            mode: 'insensitive',
+          },
+        },
+      });
+    }
+
     return album;
   }
 }
