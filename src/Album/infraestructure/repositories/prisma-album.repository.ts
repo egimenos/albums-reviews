@@ -53,7 +53,6 @@ export class PrismaAlbumRepository
     });
     return createdAlbum;
   }
-
   async findByName(name: string): Promise<Album | null> {
     // Attempt to find an exact match
     let album: Album | null = await this.repository.findFirst({
@@ -65,16 +64,15 @@ export class PrismaAlbumRepository
       },
     });
 
-    // If an exact match is not found, perform a search with 'contains'
     if (!album) {
-      album = await this.repository.findFirst({
-        where: {
-          name: {
-            contains: name,
-            mode: 'insensitive',
-          },
-        },
-      });
+      // search to avoid partial words matches
+      const regex = `%(^|[^a-zA-Z0-9])${name}([^a-zA-Z0-9]|$)%`;
+
+      const results: Album[] = await this.getClient().$queryRaw`
+      SELECT * FROM "Album" WHERE "name" SIMILAR TO ${regex}
+    `;
+
+      album = results.length > 0 ? results[0] : null;
     }
 
     return album;
