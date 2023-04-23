@@ -12,6 +12,6 @@ export class CreateAlbumUseCase {
   ) {}
 
   async run(createAlbumDto: CreateAlbumDto): Promise<Album> {
-    return this.albumRepository.create(createAlbumDto);
+    return await this.albumRepository.create(createAlbumDto);
   }
 }

@@ -38,12 +38,12 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
   private async fetchAllReviews(): Promise<FetchReviewsResponse> {
     Logger.log('Starting fetching all reviews');
 
-    let page = 1;
+    let page = 8;
     let completed = 0;
     let completedPages = 0;
     let keepFetching = true;
 
-    while (keepFetching) {
+    while (keepFetching && page <= 8) {
       const url = baseUrl + `/reviews/albums/?page=${page}`;
       const { html, code } = await this.fetchHTML(url);
 
@@ -157,28 +157,61 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
     $: cheerio.Root,
   ): Promise<Date> {
     try {
-      const review = $(reviewElement);
+      const albumNode$ = $(reviewElement);
 
-      const relativeLink = review.find('a.review__link').attr('href');
+      const relativeLink = albumNode$.find('a.review__link').attr('href');
       const link = baseUrl + relativeLink;
 
-      const albumTitle = review.find('h2.review__title-album').text();
+      let albumTitle = albumNode$.find('h2.review__title-album').text();
 
       const genres = [];
-      review.find('ul.genre-list li a').each((_genreIndex, genreElement) => {
-        genres.push($(genreElement).text());
-      });
-      const publicationDate = review.find('time.pub-date').attr('datetime');
+      albumNode$
+        .find('ul.genre-list li a')
+        .each((_genreIndex, genreElement) => {
+          genres.push($(genreElement).text());
+        });
+      const publicationDate = albumNode$.find('time.pub-date').attr('datetime');
 
-      const artist = review
+      const artist = albumNode$
         .find('ul.artist-list.review__title-artist li')
         .text();
 
       // fetch detail page
 
       const { html: reviewDetailHTML } = await this.fetchHTML(link);
-      const review$ = cheerio.load(reviewDetailHTML);
-      const score = review$('div[class*="ScoreCircle"] p').text();
+      const albumDetail$ = $(cheerio.load(reviewDetailHTML));
+
+      const albumPicker = albumDetail$.find('.album-picker');
+
+      // this is a special review page with element album-picker
+      if (albumPicker.length > 0) {
+        const variants = $('.single-album-tombstone');
+
+        for (const variant of variants) {
+          const variant$ = $(variant);
+          albumTitle = variant$
+            .find('.single-album-tombstone__review-title')
+            .text();
+
+          const score = variant$.find('.score').text();
+
+          const album: Album = {
+            name: albumTitle,
+            score: parseFloat(score),
+            reviewDate: new Date(publicationDate),
+            genres: genres.join('-'),
+            link: link,
+            artist,
+          };
+          Logger.log(album);
+
+          await this.createAlbumUseCase.run(album);
+          return album.reviewDate;
+        }
+      }
+
+      // this is a regular review page
+      const score = albumDetail$.find('div[class*="ScoreCircle"] p').text();
 
       const album: Album = {
         name: albumTitle,

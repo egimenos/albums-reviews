@@ -1,7 +1,11 @@
-.PHONY: start stop app-logs build start-services
+.PHONY: debug start stop app-logs start-services
 
 build:
-	docker-compose up -d --build
+	docker-compose build -d
+
+debug:
+	docker-compose up -d postgres pgadmin
+	docker-compose run -d --rm --service-ports nestjs-api npm run start:inspect
 
 start:
 	docker-compose up -d

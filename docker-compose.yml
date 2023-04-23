@@ -29,7 +29,8 @@ services:
   nestjs-api:
     build:
       context: .
-      dockerfile: Dockerfile
+      target: install-dependencies
+    command: npm run start:dev
     volumes:
       - ./src:/user/src/app/src
     env_file:
@@ -37,6 +38,7 @@ services:
     ports:
       - '3000:3000'
       - '5555:5555'
+      - '9229:9229'
     depends_on:
       - postgres
     networks:
