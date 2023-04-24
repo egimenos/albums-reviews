@@ -1,7 +1,7 @@
 .PHONY: debug start stop app-logs start-services
 
 build:
-	docker-compose build -d
+	docker-compose build
 
 debug:
 	docker-compose up -d postgres pgadmin

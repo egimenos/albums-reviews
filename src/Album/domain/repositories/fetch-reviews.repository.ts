@@ -1,5 +1,4 @@
 export type Response = {
-  completed: number;
   pages: number;
   message: string;
 };
