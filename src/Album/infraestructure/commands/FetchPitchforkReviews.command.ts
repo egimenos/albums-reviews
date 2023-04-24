@@ -70,6 +70,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
         });
         const doc = dom.window.document;
         this.processPage(doc);
+        dom.window.close();
       }
 
       page = page + 1;
@@ -128,6 +129,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
         }
 
         this.processPage(doc);
+        dom.window.close();
       }
 
       page = page + 1;
@@ -254,7 +256,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
           albums.push(album);
         }
       }
-
+      dom.window.close();
       return albums;
     } catch (error) {
       Logger.error(`Error fetching review ${error}`);

@@ -18,20 +18,47 @@ Currently, it only fetches reviews from https://pitchfork.com. I use it in conju
 
 ## Installation
 
-1. Clone the repository:
+Clone the repository:
 
 ```bash
 git clone https://github.com/yourusername/albums-reviews.git
 cd  reviews
 ```
 
-2. Set .env file:
+Set .env file:
 
 `DATABASE_URL="postgresql://admin:admin@postgres:5432/albums-reviews?schema=public"`
 
-3. Run the command `make start`
+Build the image:
 
-## Deployment.
+```sh
+make build
+```
+
+## Usage
+
+### To start the app along with the database and pgadmin
+
+```sh
+make start
+```
+
+### See the logs
+
+```sh
+make app-logs
+```
+
+### Run migrations and access Prisma studio
+
+Inside the `nestjs-api` service container, run `npm run migrate`
+To launch Prisma Studio, inside the same bash session in the app service: `npm run prisma:studio`
+
+### Access pgAdmin
+
+Go to `http://ocalhost:8080` and acess using the credentials of the database.
+
+## Deployment
 
 The project is prepared and contains a `fly.toml` to be deployed to `https://fly.io/`
 
