@@ -64,7 +64,7 @@ export class PrismaAlbumRepository
       },
     });
 
-    if (!album) {
+    if (!album && name.length >= 4) {
       // search to avoid partial words matches
       const regex = `%(^|[^a-zA-Z0-9])${name}([^a-zA-Z0-9]|$)%`;
 

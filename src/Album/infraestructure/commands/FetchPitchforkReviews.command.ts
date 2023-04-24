@@ -3,7 +3,7 @@ import {
   FetchReviewsRepository,
   Response as FetchReviewsResponse,
 } from 'src/Album/domain/repositories/fetch-reviews.repository';
-import { Inject, Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { ALBUM_SYMBOLS } from '../IoC/symbols';
 import { CreateAlbumUseCase } from 'src/Album/application/create-album.usecase';
@@ -207,7 +207,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
       const { html } = await this.fetchHTML(link);
 
       if (!html) {
-        throw new NotFoundException();
+        return albums;
       }
 
       const dom = new JSDOM(html, {
@@ -235,7 +235,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
         });
       }
 
-      // this is a special review page with element album-picker
+      // this is a special review page with element album-picker (several reviees in a single detail page)
       if (albumPicker) {
         const variants = doc.querySelectorAll('.single-album-tombstone');
 
@@ -260,6 +260,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
       return albums;
     } catch (error) {
       Logger.error(`Error fetching review ${error}`);
+      return albums;
     }
   }
 }
