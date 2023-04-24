@@ -23,6 +23,7 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
     @Inject(ALBUM_SYMBOLS.FIND_LAST_ALBUM_USECASE)
     protected findLastAlbumUseCase: FindLastAlbumUseCase,
   ) {
+    // needed to avoid verbose css not able to parse errors from jsdom
     this.virtualConsole = new VirtualConsole();
     this.virtualConsole.sendTo(console, { omitJSDOMErrors: true });
     this.virtualConsole.on('jsdomError', (err) => {
@@ -65,44 +66,10 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
 
       if (html) {
         const dom = new JSDOM(html, {
-          url,
           virtualConsole: this.virtualConsole,
         });
         const doc = dom.window.document;
-        const albumNodes = doc.querySelectorAll('div.review');
-
-        for (const element of albumNodes) {
-          const reviewLink = element
-            .querySelector('a.review__link')
-            .getAttribute('href');
-
-          const genres = [];
-          element
-            .querySelectorAll('ul.genre-list li a')
-            .forEach((genreElement) => {
-              genres.push(genreElement.textContent);
-            });
-
-          const publicationDate = element
-            .querySelector('time.pub-date')
-            .getAttribute('datetime');
-
-          const artist = element.querySelector(
-            'ul.artist-list.review__title-artist li',
-          ).textContent;
-
-          const albums = await this.processReview(reviewLink, {
-            reviewDate: new Date(publicationDate),
-            genres: genres.join('-'),
-            artist,
-          });
-
-          Logger.log(JSON.stringify(albums, null, 2));
-
-          albums.forEach((album) => {
-            this.createAlbumUseCase.run(album);
-          });
-        }
+        this.processPage(doc);
       }
 
       page = page + 1;
@@ -151,42 +118,16 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
         const doc = dom.window.document;
         const albumNodes = doc.querySelectorAll('div.review');
 
-        for (const element of albumNodes) {
-          const publicationDate = element
-            .querySelector('time.pub-date')
-            .getAttribute('datetime');
+        const pagePublicationDate = albumNodes[0]
+          .querySelector('time.pub-date')
+          .getAttribute('datetime');
 
-          if (isBefore(new Date(publicationDate), lastReviewDate)) {
-            keepFetching = false;
-            break;
-          }
-
-          const reviewLink = element
-            .querySelector('a.review__link')
-            .getAttribute('href');
-
-          const genres = [];
-          element
-            .querySelectorAll('ul.genre-list li a')
-            .forEach((genreElement) => {
-              genres.push(genreElement.textContent);
-            });
-          const artist = element.querySelector(
-            'ul.artist-list.review__title-artist li',
-          ).textContent;
-
-          const albums = await this.processReview(reviewLink, {
-            reviewDate: new Date(publicationDate),
-            genres: genres.join('-'),
-            artist,
-          });
-
-          Logger.log(JSON.stringify(albums, null, 2));
-
-          albums.forEach((album) => {
-            this.createAlbumUseCase.run(album);
-          });
+        if (isBefore(new Date(pagePublicationDate), lastReviewDate)) {
+          keepFetching = false;
+          break;
         }
+
+        this.processPage(doc);
       }
 
       page = page + 1;
@@ -214,6 +155,41 @@ export class FetchPitchforkReviewsCommand implements FetchReviewsRepository {
       }
 
       return { html: null, code: 500 };
+    }
+  }
+
+  private async processPage(doc: Document) {
+    const albumNodes = doc.querySelectorAll('div.review');
+
+    for (const element of albumNodes) {
+      const reviewLink = element
+        .querySelector('a.review__link')
+        .getAttribute('href');
+
+      const genres = [];
+      element.querySelectorAll('ul.genre-list li a').forEach((genreElement) => {
+        genres.push(genreElement.textContent);
+      });
+
+      const publicationDate = element
+        .querySelector('time.pub-date')
+        .getAttribute('datetime');
+
+      const artist = element.querySelector(
+        'ul.artist-list.review__title-artist li',
+      ).textContent;
+
+      const albums = await this.processReview(reviewLink, {
+        reviewDate: new Date(publicationDate),
+        genres: genres.join('-'),
+        artist,
+      });
+
+      Logger.log(JSON.stringify(albums, null, 2));
+
+      albums.forEach((album) => {
+        this.createAlbumUseCase.run(album);
+      });
     }
   }
 
