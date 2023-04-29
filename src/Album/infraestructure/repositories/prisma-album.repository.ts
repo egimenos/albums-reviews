@@ -64,6 +64,20 @@ export class PrismaAlbumRepository
       },
     });
 
+    const parenthesisIndex = name.indexOf('(');
+
+    // try to find for coincidences in case names such as Adore (20th aniversay edition) should match Adore
+    if (!album && parenthesisIndex !== -1 && name.length > 4) {
+      album = await this.repository.findFirst({
+        where: {
+          name: {
+            startsWith: name.substring(0, parenthesisIndex).trim(),
+            mode: 'insensitive',
+          },
+        },
+      });
+    }
+
     if (!album && name.length >= 4) {
       // search to avoid partial words matches
       const regex = `%(^|[^a-zA-Z0-9])${name}([^a-zA-Z0-9]|$)%`;
