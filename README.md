@@ -2,7 +2,7 @@
 
 This backend project retrieves album review scores and links from various websites and provides API endpoints for further use. Its purpose is personal use, allowing me to practice with the Nest.js framework.
 
-Currently, it only fetches reviews from https://pitchfork.com. I use it in conjunction with this Chrome extension to insert scores into playlists: https://github.com/egimenos/spotify-playlist-reviews-extension. This way, I can easily see an album's score for a song and quickly access the review page.
+Currently, it only fetches reviews from https://pitchfork.com. I use it in conjunction with this Chrome extension to insert scores into playlists: https://github.com/egimenos/spotify-playlist-reviews-extension. This way, I can easily see an album's score and link to the review for a song and quickly access the review page.
 
 ## Features
 
